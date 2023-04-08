@@ -1,10 +1,7 @@
-//
-// Created by teufel on 21.01.23.
-//
-
 #ifndef LAB_03_SMART_POINTERS_SHAREDPTR_HPP
 #define LAB_03_SMART_POINTERS_SHAREDPTR_HPP
 
+#include <iostream>
 template<typename T>
 class SharedPtr {
 public:
@@ -42,7 +39,7 @@ public:
 };
 
 // Необходимо будет объяснить, что это за функция и для чего она была реализована
-template<typename Args...>
+template<typename ...Args>
 auto makeShared(Args &&... args) -> SharedPtr<Args...>;
 
 #endif //LAB_03_SMART_POINTERS_SHAREDPTR_HPP
