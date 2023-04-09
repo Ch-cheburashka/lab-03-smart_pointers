@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <UniquePtr/UniquePtr.hpp>
-
+#include <memory>
+#include <vector>
 struct test {
     int age;
     std::string name;
@@ -13,17 +14,17 @@ struct test {
 
 void print_info (const UniquePtr<test>& u1, const UniquePtr<test>& u2) {
     if (!u1)
-        std::cout << "uniquePtr points to nullptr\n";
+        std::cout << "u1 points to nullptr\n";
     else {
-        std::cout << "uniquePtr:\n";
+        std::cout << "u1:\n";
         std::cout << "test object: " << *u1 << "\n";
         std::cout << "name: " << u1->name << "\n";
     }
 
     if (!u2)
-        std::cout << "uniquePtr1 points to nullptr\n\n";
+        std::cout << "u2 points to nullptr\n\n";
     else {
-        std::cout << "uniquePtr1:\n";
+        std::cout << "u2:\n";
         std::cout << "test object: " << *u2 << "\n";
         std::cout << "name: " << u2->name << "\n\n";
     }
@@ -31,18 +32,18 @@ void print_info (const UniquePtr<test>& u1, const UniquePtr<test>& u2) {
 
 int main(int argc, char** argv) {
 
-    std::cout << "creating uniquePtr pointing to test-object\n";
-    UniquePtr<test> uniquePtr (new test{17,"Marie"});
-    std::cout << "creating uniquePtr pointing to nullptr\n\n";
-    UniquePtr<test> uniquePtr1;
-    print_info(uniquePtr,uniquePtr1);
+    std::cout << "creating u1 pointing to test-object\n";
+    UniquePtr<test> u1 (new test{17, "Marie"});
+    std::cout << "creating u1 pointing to nullptr\n\n";
+    UniquePtr<test> u2;
+    print_info(u1, u2);
 
-    std::cout << "reseting uniquePtr\n";
-    uniquePtr.reset(new test{16,"Biba"});
-    print_info(uniquePtr,uniquePtr1);
+    std::cout << "reseting u1\n";
+    u1.reset(new test{16, "Biba"});
+    print_info(u1, u2);
 
     std::cout << "swaping pointers\n";
-    uniquePtr1.swap(uniquePtr);
-    print_info(uniquePtr,uniquePtr1);
+    u2.swap(u1);
+    print_info(u1, u2);
 
 }
