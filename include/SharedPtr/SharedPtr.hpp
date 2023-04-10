@@ -1,41 +1,91 @@
 #ifndef LAB_03_SMART_POINTERS_SHAREDPTR_HPP
 #define LAB_03_SMART_POINTERS_SHAREDPTR_HPP
 
-#include <iostream>
 template<typename T>
 class SharedPtr {
 public:
-    SharedPtr();
+    SharedPtr() : _ptr(nullptr), _count(nullptr) {}
 
-    SharedPtr(T *ptr);
+    explicit SharedPtr(T *ptr) : _ptr(ptr), _count(new size_t(1)) { }
 
-    SharedPtr(const SharedPtr &r);
+    SharedPtr(const SharedPtr &r) : _ptr(r._ptr), _count(r._count) {
+        ++*_count;
+    }
 
-    SharedPtr(SharedPtr &&r);
+    SharedPtr(SharedPtr &&r) noexcept : _ptr(r._ptr), _count(r._count) {
+        r._ptr = nullptr;
+        r._count = nullptr;
+    }
 
-    ~SharedPtr();
+    ~SharedPtr() {
+        if (*_count > 1)
+            --*_count;
+        else {
+            delete _ptr;
+            delete _count;
+        }
+    }
 
-    auto operator=(const SharedPtr &r) -> SharedPtr &;
+    auto operator=(const SharedPtr &r) -> SharedPtr & {
+        _ptr = r._ptr;
+        _count = r._count;
+        ++*_count;
+        return *this;
+    }
 
-    auto operator=(SharedPtr &&r) -> SharedPtr &;
+    auto operator=(SharedPtr &&r)  noexcept -> SharedPtr & {
+        _ptr = r._ptr;
+        _count = r._count;
+        r._count = nullptr;
+        r._ptr = nullptr;
+        return *this;
+    }
 
-    // проверяет, указывает ли указатель на объект
-    operator bool() const;
+    explicit operator bool() const {
+        return _ptr != nullptr;
+    }
 
-    auto operator*() const -> T &;
+    auto operator*() const -> T & {
+        return *_ptr;
+    }
 
-    auto operator->() const -> T *;
+    auto operator->() const -> T * {
+        return _ptr;
+    }
 
-    auto get() -> T *;
+    auto get() -> T * {
+        return _ptr;
+    }
 
-    void reset();
+    void reset() {
+        _ptr = nullptr;
+    }
 
-    void reset(T *ptr);
+    void reset(T *ptr) {
+        if (*_count == 1) {
+            delete _ptr;
+            _ptr = ptr;
+        }
+        else {
+            _ptr = ptr;
+            *_count = 1;
+        }
+    }
 
-    void swap(SharedPtr &r);
+    void swap(SharedPtr &r) {
+        if (_ptr != r._ptr) {
+            std::swap(_ptr, r._ptr);
+            std::swap(_count, r._count);
+        }
+    }
 
-    // возвращает количество объектов SharedPtr, которые ссылаются на тот же управляемый объект
-    auto use_count() const -> size_t;
+    auto use_count() const -> size_t {
+        return *_count;
+    }
+
+private:
+    T* _ptr;
+    size_t* _count;
 };
 
 // Необходимо будет объяснить, что это за функция и для чего она была реализована
