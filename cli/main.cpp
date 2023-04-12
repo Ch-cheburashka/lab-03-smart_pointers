@@ -4,6 +4,7 @@
 struct test {
     int age;
     std::string name;
+    test(int a, std::string n) : age(a), name(n) {}
     friend std::ostream &operator<<(std::ostream &os,const test& test) {
         os << test.name << " - " << test.age;
         return os;
@@ -66,7 +67,7 @@ void test_unique () {
 
 void test_shared () {
     std::cout << "creating s1 pointing to test-object\n";
-    SharedPtr<test> s1 (new test{17, "Marie"});
+    auto s1 = makeShared<test>(17,"Marie");
     std::cout << "creating s1 pointing to the same test-object\n\n";
     SharedPtr<test> s2 (s1);
     print_shared_info(s1, s2);
