@@ -13,8 +13,5 @@ target_include_directories(
         $<INSTALL_INTERFACE:include>
 )
 
-#target_compile_options(shared_ptr PRIVATE -Wall -Wextra -pedantic -Werror)
-#target_compile_options(unique_ptr PRIVATE -Wall -Wextra -pedantic -Werror)
-
 add_executable(cli cli/main.cpp)
 target_link_libraries(cli smart_pointers)
